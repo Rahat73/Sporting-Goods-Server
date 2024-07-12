@@ -13,6 +13,11 @@ const getAllProductFromDB = async () => {
   return result;
 };
 
+const getProductByIdFromDB = async (id: string) => {
+  const result = await Product.findById(id);
+  return result;
+};
+
 const updateProductIntoDB = async (id: string, payload: Partial<TProduct>) => {
   //check if Product exists
   const product = await Product.findById(id);
@@ -36,6 +41,7 @@ const deleteProductFromDB = async (id: string) => {
 export const ProductServices = {
   createProductIntoDB,
   getAllProductFromDB,
+  getProductByIdFromDB,
   updateProductIntoDB,
   deleteProductFromDB,
 };
