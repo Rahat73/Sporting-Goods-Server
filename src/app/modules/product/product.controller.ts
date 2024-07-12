@@ -17,8 +17,8 @@ const getAllProducts = catchAsync(async (req, res) => {
 
   if (result.length === 0) {
     sendResponse(res, {
-      statusCode: 404,
-      success: false,
+      statusCode: 200,
+      success: true,
       message: 'No data found',
       data: result,
     });

@@ -33,15 +33,36 @@ class QueryBuilder<T> {
     const excludeFields = ['searchParams', 'sort', 'limit', 'page', 'fields'];
     excludeFields.forEach((field) => delete queryObj[field]);
 
-    this.modelQuery = this?.modelQuery?.find(queryObj as FilterQuery<T>);
+    // Handle price range from query parameters
+    const min = Number(queryObj.min);
+    const max = Number(queryObj.max);
+    if (!isNaN(min) && !isNaN(max)) {
+      delete queryObj.min;
+      delete queryObj.max;
+      queryObj.price = { $gte: min, $lte: max };
+    } else if (min !== undefined || max !== undefined) {
+      //   console.warn(
+      //     'Invalid price range format. Please provide both min and max values.',
+      //   );
+    }
 
+    // Handle rating filter
+    const rating = Number(queryObj.rating);
+    if (!isNaN(rating)) {
+      delete queryObj.rating;
+      queryObj.rating = { $gte: rating };
+    } else if (rating !== undefined) {
+      //   console.warn('Invalid rating format. Please provide a valid number.');
+    }
+
+    this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
     return this;
   }
 
   //sorting [query -> sort=id,name]
   sort() {
     const sort =
-      (this?.query?.sort as string)?.split(',')?.join(' ') || 'price';
+      (this?.query?.sort as string)?.split(',')?.join(' ') || '-createdAt';
     this.modelQuery = this?.modelQuery?.sort(sort);
 
     return this;
