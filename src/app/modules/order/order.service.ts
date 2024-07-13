@@ -16,12 +16,12 @@ const createOrderIntoDB = async (payload: TOrder) => {
       );
 
       if (!productRecord) {
-        throw new AppError(404, `Product not found.`);
+        throw new AppError(200, `Product not found.`);
       }
 
       if (productRecord.instock < product.quantity) {
         throw new AppError(
-          404,
+          200,
           `Insufficient stock for product ${productRecord.name}.`,
         );
       }
